@@ -1,79 +1,98 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity, UserRole } from '../entities/user.entity';
 import { Repository } from 'typeorm';
 import { RegisterDto } from '../dto/register.dto';
-import * as bcrypt from 'bcrypt'
+import { LoginDto } from '../dto/login.dto';
+import { TokenService } from './token.service';
+import { PasswordService } from './password.service';
 
 @Injectable()
 export class AuthService {
     constructor(
         @InjectRepository(UserEntity)
-        private usersRepository : Repository<UserEntity>
-    ){}
+        private readonly usersRepository: Repository<UserEntity>,
+        private readonly tokenService: TokenService,
+        private readonly passwordService: PasswordService,
+    ) { }
 
-    private async hashPassword(password: string) : Promise<string> {
-        const saltNumber = 10;
-        return bcrypt.hash(password, saltNumber);
-    }
-
-    async register(registerBody : RegisterDto) {
+    private async createUser(
+        registerBody: RegisterDto,
+        role: UserRole,
+    ) {
         const existingUser = await this.usersRepository.findOne({
-            where: {
-                email: registerBody.email
-            }
+            where: { email: registerBody.email },
         });
 
-        if(existingUser) {
-            throw new ConflictException('Email already exists. Pls try with a diferent email')
+        if (existingUser) {
+            throw new ConflictException('Email already exists');
         }
-        
-        const hashedPassword = await this.hashPassword(registerBody.password);
 
-        const newlyCreatedUser = this.usersRepository.create({
-            email: registerBody.email,
-            name: registerBody.name,
+        const hashedPassword = await this.passwordService.hash(
+            registerBody.password,
+        );
+
+        const user = this.usersRepository.create({
+            ...registerBody,
             password: hashedPassword,
-            role: UserRole.USER
+            role,
         });
 
-        const savedUser = await this.usersRepository.save(newlyCreatedUser);
+        const savedUser = await this.usersRepository.save(user);
 
-        //destructure
-        const {password, ...result} = savedUser;
+        const { password, ...result } = savedUser;
+
         return {
             user: result,
-            message: `Registration completed. Pls login to continue`
-        }
+            message: 'Registration successful',
+        };
     }
 
-    async createAdmin(registerBody : RegisterDto) {
-        const existingUser = await this.usersRepository.findOne({
-            where: {
-                email: registerBody.email
-            }
+    async createUserAccount(userBody: RegisterDto) {
+        return this.createUser(userBody, UserRole.USER);
+    }
+
+    async createAdminAccount(adminBody: RegisterDto) {
+        return this.createUser(adminBody, UserRole.ADMIN);
+    }
+
+    async login(loginBody: LoginDto) {
+        const user = await this.usersRepository.findOne({
+            where: { email: loginBody.email },
         });
 
-        if(existingUser) {
-            throw new ConflictException('Email already exists. Pls try with a diferent email')
+        const valid = await this.passwordService.compare(
+            loginBody.password,
+            user?.password,
+        );
+
+        if (!user || !valid) {
+            throw new UnauthorizedException('Invalid credentials');
         }
-        
-        const hashedPassword = await this.hashPassword(registerBody.password);
 
-        const newlyCreatedAdmin = this.usersRepository.create({
-            email: registerBody.email,
-            name: registerBody.name,
-            password: hashedPassword,
-            role: UserRole.ADMIN
-        });
+        const tokens = this.tokenService.generateTokens(user);
 
-        const savedUser = await this.usersRepository.save(newlyCreatedAdmin);
+        const { password, ...result } = user;
 
-        //destructure
-        const {password, ...result} = savedUser;
         return {
             user: result,
-            message: `Registration completed for admin. Pls login to continue`
+            ...tokens,
+        };
+    }
+
+    async refreshToken(refreshToken: string) {
+        const payload = this.tokenService.verifyRefreshToken(refreshToken);
+
+        const user = await this.usersRepository.findOne({
+            where: { id: payload.sub },
+        });
+
+        if (!user) {
+            throw new UnauthorizedException('Invalid Token');
         }
+
+        return {
+            accessToken: this.tokenService.generateAccessToken(user),
+        };
     }
 }
