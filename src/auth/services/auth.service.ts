@@ -95,4 +95,25 @@ export class AuthService {
             accessToken: this.tokenService.generateAccessToken(user),
         };
     }
+
+    async getUserById(userId : number) {
+        const user = await this.usersRepository.findOne({
+            where : {
+                id : userId
+            }
+        });
+
+        if(!user) {
+            throw new UnauthorizedException(
+                `User Not Found!`
+            );
+        }
+
+        const {
+            password,
+            ...result
+        } = user;
+
+        return result;
+    }
 }
