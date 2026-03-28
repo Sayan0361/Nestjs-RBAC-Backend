@@ -6,6 +6,7 @@ import { RegisterDto } from '../dto/register.dto';
 import { LoginDto } from '../dto/login.dto';
 import { TokenService } from './token.service';
 import { PasswordService } from './password.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -14,7 +15,33 @@ export class AuthService {
         private readonly usersRepository: Repository<UserEntity>,
         private readonly tokenService: TokenService,
         private readonly passwordService: PasswordService,
-    ) { }
+    ) {
+        // From here, u will get a hash which will be used to create the first admin user
+        // bcrypt.hash('123456',10).then(console.log); // u will get a hash here
+        // Now Open PostgreSQL Server and create a new query
+        /**
+            INSERT INTO "user_entity" (
+                email,
+                name,
+                password,
+                role
+            )
+            VALUES (
+                'admin@gmail.com',
+                'Admin',
+                '<PASTE YOUR HASH HERE>',
+                'admin'
+            );
+         */
+        // Run the above query and u will get the first admin user who can create new admins
+        /**
+         *  Login Details of super admin (First Admin)
+        {
+            "email": "admin@gmail.com",
+            "password": "123456"
+        }
+         */
+    }
 
     private async createUser(
         registerBody: RegisterDto,

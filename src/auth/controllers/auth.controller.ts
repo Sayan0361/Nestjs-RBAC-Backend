@@ -16,7 +16,7 @@ export class AuthController {
 
     // POST : auth/register
     /**
-     * 
+     *  Body :
      * {
             "email" : "user1@gmail.com",
             "name" : "user1",
@@ -30,7 +30,7 @@ export class AuthController {
 
     // POST : auth/login
     /**
-     * 
+     *  Body :
      * {
             "email" : "user1@gmail.com",
             "password" : "user1"
@@ -43,7 +43,7 @@ export class AuthController {
 
     // POST : auth/refresh
     /**
-     * 
+     *  Body:
      * {
             "refreshToken": "PASTE_REFRESH_TOKEN_HERE"
         }
@@ -56,13 +56,40 @@ export class AuthController {
     // AuthGuard (protected routes) [RBAC]
 
     // GET :  auth/profile
+    /**
+     * 
+        Header : Select Authorization as key
+        {Bearer <Access Token>} as the value
+        U will get the Access Token once u login
+     */
     @UseGuards(JwtAuthGuard)
     @Get('profile')
     getProfile(@CurrentUser() user : any) {
         return user;
     }
 
-    // POST : auth/create-admin
+    // ONLY ADMIN CAN CREATE ANOTHER ADMIN USER
+    // Login with super Admin details : [Craetion of Super Admin is in services/auth.service.ts]
+    /** Body :
+        {
+            "email": "admin@gmail.com",
+            "password": "123456"
+        }
+     */
+    // U will get the Access Token there, Copy it
+    // Now POST : auth/create-admin
+    /**
+        Header : Select Authorization as key
+        {Bearer <Access Token>} as the value
+     */
+    /**
+        Body :
+            {
+                "email": "admin1@gmail.com",
+                "name": "admin1",
+                "password": "admin1"
+            }
+     */
     @Post('create-admin')
     @Roles(UserRole.ADMIN)
     @UseGuards(JwtAuthGuard, RolesGuard)
