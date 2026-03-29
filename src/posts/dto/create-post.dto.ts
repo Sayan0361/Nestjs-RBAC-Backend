@@ -13,10 +13,11 @@ export class CreatePostDto {
     @MaxLength(500, { message: 'Content cannot be longer than 500 characters' })
     content!: string;
 
-    @IsNotEmpty({ message: 'Author is required' })
-    @IsString({ message: 'Author must be a string' })
-    @MinLength(3, { message: 'Author must be atleast 3 characters long' })
-    @MaxLength(100, { message: 'Author cannot be longer than 100 characters' })
-    authorName!: string;
+    // U will get the author details from Header : Bearer <AccessToken>
+    // @IsNotEmpty({ message: 'Author is required' })
+    // @IsString({ message: 'Author must be a string' })
+    // @MinLength(3, { message: 'Author must be atleast 3 characters long' })
+    // @MaxLength(100, { message: 'Author cannot be longer than 100 characters' })
+    // authorName!: string;
 
 }

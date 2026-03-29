@@ -1,9 +1,12 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { PostsService } from '../services/posts.service';
 import { PostExistsPipe } from '../pipes/post-exists.pipe';
 import { CreatePostDto } from '../dto/create-post.dto';
 import { UpdatePostDto } from '../dto/update-post.dto';
 import { PostEntity } from '../entities/post.entity';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { UserEntity } from 'src/auth/entities/user.entity';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 
 @Controller('posts')
@@ -26,31 +29,36 @@ export class PostsController {
     }
 
     // localhost:3000/posts : POST request 
+    // First u need to login as normal user and get the Access Token
     // createPostData = 
     // {
     //     "title": "Post data verification2",
     //     "content": "If your app is slow, users do not care how good your UI or logic is.",
     //     "authorName": "Sayan"
     // }
+    @UseGuards(JwtAuthGuard)
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    async create(@Body() createPostData: CreatePostDto) : Promise<PostEntity> {
-        return this.postsService.create(createPostData);
+    async create(@Body() createPostData: CreatePostDto, @CurrentUser() currentUser: UserEntity) : Promise<PostEntity> {
+        return this.postsService.create(createPostData, currentUser);
     }
 
     // localhost:3000/posts/1 : PUT request
     // updatePostData = 
-    // {
-    //     "title": "Update data verification2",
-    //     "content": "If your app is slow, users do not care how good your UI or logic is.",
-    //     "authorName": "Sayan"
-    // }
+    /**  
+    {
+        "title": "Update data verification2",
+        "content": "If your app is slow, users do not care how good your UI or logic is."
+    }
+    */
+    @UseGuards(JwtAuthGuard)
     @Put(':id')
-    async update(@Param('id', ParseIntPipe, PostExistsPipe) id: number, @Body() updatePostData:UpdatePostDto): Promise<PostEntity> {
-        return this.postsService.update(id, updatePostData);
+    async update(@Param('id', ParseIntPipe, PostExistsPipe) id: number, @Body() updatePostData:UpdatePostDto, @CurrentUser() currentUser: UserEntity): Promise<PostEntity> {
+        return this.postsService.update(id, updatePostData, currentUser);
     }
 
     // localhost:3000/posts/1 : DELETE request
+    @UseGuards(JwtAuthGuard)
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
     async delete(@Param('id', ParseIntPipe, PostExistsPipe) id: number) : Promise<void> {

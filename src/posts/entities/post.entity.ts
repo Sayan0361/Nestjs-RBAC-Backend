@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { UserEntity } from "src/auth/entities/user.entity";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 // An entity is a class that represents a database table.
 @Entity()
@@ -14,8 +15,10 @@ export class PostEntity {
     @Column({ type: 'text' })
     content!: string;
 
-    @Column()
-    authorName!: string;
+    // One post belongs to one user
+    // One user can have multiple posts
+    @ManyToOne(() => UserEntity, (user) => user.posts)
+    authorName!: UserEntity;
 
     @CreateDateColumn()
     createdDate!: Date;

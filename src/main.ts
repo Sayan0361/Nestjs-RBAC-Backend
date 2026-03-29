@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, ClassSerializerInterceptor } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,6 +14,10 @@ async function bootstrap() {
       disableErrorMessages: false, // Expose validation details to the client
     })
   );
+  
+  // ClassSerializerInterceptor to apply @Exclude() and @Expose() decorators
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+  
   // u can use @UsePipes(new ValidationPipe({whiteList:true,forbidNonWhitelisted:true})) decorator to particularly add validation to only 1 controller
 
   await app.listen(process.env.PORT ?? 3000);

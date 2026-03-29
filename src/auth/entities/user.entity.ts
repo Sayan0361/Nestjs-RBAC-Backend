@@ -1,5 +1,6 @@
 import { PostEntity } from "src/posts/entities/post.entity";
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Exclude } from "class-transformer";
 
 export enum UserRole {
     USER = 'user',
@@ -19,6 +20,7 @@ export class UserEntity {
     })
     email!: string;
 
+    @Exclude()
     @Column()
     password!: string;
 
@@ -32,9 +34,11 @@ export class UserEntity {
     @OneToMany(() => PostEntity, (post) => post.authorName)
     posts!: PostEntity[];
 
+    @Exclude()
     @CreateDateColumn()
     createdAt!: Date;
 
+    @Exclude()
     @UpdateDateColumn()
     updatedAt!: Date;
 }
