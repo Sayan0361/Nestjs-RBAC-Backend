@@ -7,6 +7,7 @@ import { PostEntity } from '../entities/post.entity';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { UserEntity } from 'src/auth/entities/user.entity';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { PostsThrottler } from '../guards/posts-throttler.guard';
 
 
 @Controller('posts')
@@ -37,6 +38,7 @@ export class PostsController {
     //     "authorName": "Sayan"
     // }
     @UseGuards(JwtAuthGuard)
+    @UseGuards(PostsThrottler)
     @Post()
     @HttpCode(HttpStatus.CREATED)
     async create(@Body() createPostData: CreatePostDto, @CurrentUser() currentUser: UserEntity) : Promise<PostEntity> {
@@ -52,6 +54,7 @@ export class PostsController {
     }
     */
     @UseGuards(JwtAuthGuard)
+    @UseGuards(PostsThrottler)
     @Put(':id')
     async update(@Param('id', ParseIntPipe, PostExistsPipe) id: number, @Body() updatePostData:UpdatePostDto, @CurrentUser() currentUser: UserEntity): Promise<PostEntity> {
         return this.postsService.update(id, updatePostData, currentUser);
@@ -59,6 +62,7 @@ export class PostsController {
 
     // localhost:3000/posts/1 : DELETE request
     @UseGuards(JwtAuthGuard)
+    @UseGuards(PostsThrottler)
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
     async delete(@Param('id', ParseIntPipe, PostExistsPipe) id: number) : Promise<void> {

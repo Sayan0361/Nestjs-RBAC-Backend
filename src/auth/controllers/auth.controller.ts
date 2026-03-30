@@ -7,6 +7,7 @@ import { CurrentUser } from '../decorators/current-user.decorator';
 import { Roles } from '../decorators/roles.decorators';
 import { UserRole } from '../entities/user.entity';
 import { RolesGuard } from '../guards/roles-guard';
+import { LoginThrottlerGuard } from '../guards/login-throttler.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -36,6 +37,7 @@ export class AuthController {
             "password" : "user1"
         }
      */
+    @UseGuards(LoginThrottlerGuard)
     @Post('login')
     login(@Body() loginBody : LoginDto) {
         return this.authService.login(loginBody);

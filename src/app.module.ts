@@ -7,10 +7,19 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostEntity } from './posts/entities/post.entity';
 import { AuthModule } from './auth/auth.module';
 import { UserEntity } from './auth/entities/user.entity';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 
 @Module({
   imports: [
+    ThrottlerModule.forRoot({
+      throttlers: [
+        {
+          ttl: 60000, // 1 minute
+          limit: 5, // max 5 requests
+        },
+      ],
+    }),
     ConfigModule.forRoot(),
     PostsModule,
     TypeOrmModule.forRootAsync({
