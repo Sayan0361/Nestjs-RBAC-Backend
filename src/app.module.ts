@@ -8,6 +8,7 @@ import { PostEntity } from './posts/entities/post.entity';
 import { AuthModule } from './auth/auth.module';
 import { UserEntity } from './auth/entities/user.entity';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { CacheModule } from '@nestjs/cache-manager';
 
 
 @Module({
@@ -20,8 +21,15 @@ import { ThrottlerModule } from '@nestjs/throttler';
         },
       ],
     }),
+    
     ConfigModule.forRoot(),
-    PostsModule,
+
+    CacheModule.register({
+      isGlobal : true,
+      ttl : 30000,
+      max : 100
+    }),
+
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -36,7 +44,10 @@ import { ThrottlerModule } from '@nestjs/throttler';
         synchronize: true,
       })
     }),
-    AuthModule
+
+    AuthModule,
+
+    PostsModule
   ],
   controllers: [AppController],
   providers: [AppService],
