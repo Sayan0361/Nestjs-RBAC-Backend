@@ -8,6 +8,8 @@ import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { UserEntity } from 'src/auth/entities/user.entity';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { PostsThrottler } from '../guards/posts-throttler.guard';
+import { FindPostsQueryDto } from '../dto/find-posts-query.dto';
+import { PaginatedResponse } from 'src/common/interfaces/paginated-response.interface';
 
 
 @Controller('posts')
@@ -18,9 +20,10 @@ export class PostsController {
 
     // localhost:3000/posts
     // localhost:3000/posts?search=getting
+    // localhost:3000/posts?page=2&limit=10
     @Get()
-    async findAll() : Promise<PostEntity[]> {
-        return this.postsService.findAll();
+    async findAll(@Query() query : FindPostsQueryDto) : Promise<PaginatedResponse<PostEntity>> {
+        return this.postsService.findAll(query);
     }
 
     // localhost:3000/posts/4

@@ -4,7 +4,7 @@ export interface PageinationMetaFormat {
     totalItems : number;
     totalPages : number;
     hasPreviousPage : boolean;
-    hasNextPage : boolean
+    hasNextPage : boolean;
 }
 
 export interface PaginatedResponse<T> {
