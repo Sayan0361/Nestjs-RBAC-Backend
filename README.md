@@ -13,7 +13,7 @@
   <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
 </p>
 
-## 📋 Description
+## Description
 
 This project is a production-ready NestJS backend application implementing **Role-Based Access Control (RBAC)** with comprehensive authentication, authorization, caching, and throttling mechanisms. The application is built with TypeScript (97.8%) and includes RESTful APIs for user management and post management with advanced security features.
 
@@ -29,46 +29,52 @@ This project is a production-ready NestJS backend application implementing **Rol
 - **Validation**: Class Validator & Class Transformer
 - **Password Hashing**: Bcrypt
 
-## 🚀 Features
+## Features
 
 ### Authentication & Authorization
-- ✅ User registration (regular users and admins)
-- ✅ JWT-based authentication with refresh token support
-- ✅ Role-Based Access Control (RBAC) with custom decorators and guards
-- ✅ Protected endpoints with JWT strategy validation
-- ✅ Comprehensive API documentation in controllers and services
+- User registration (regular users and admins)
+- JWT-based authentication with refresh token support
+- Role-Based Access Control (RBAC) with custom decorators and guards
+- Protected endpoints with JWT strategy validation
+- Comprehensive API documentation in controllers and services
 
 ### API Endpoints
-- ✅ User authentication (register, login, refresh token)
-- ✅ RESTful CRUD operations for posts
-- ✅ Author relationship implementation
-- ✅ Role-based endpoint access
+- User authentication (register, login, refresh token)
+- RESTful CRUD operations for posts
+- Author relationship implementation
+- Role-based endpoint access
 
 ### Performance & Security
-- ✅ **Pagination**: Implemented for posts retrieval with limit and offset
-- ✅ **Caching**: Cache manager integration for optimized data retrieval
-- ✅ **Throttling**: Custom guards for rate limiting on login and post creation
-- ✅ **Data Serialization**: Class serialization for sensitive data exclusion
-- ✅ **Environment Variables**: Secure configuration management with joi validation
-- ✅ **Database Security**: PostgreSQL with Docker setup
+- **Pagination**: Implemented for posts retrieval with limit and offset
+- **Caching**: Cache manager integration for optimized data retrieval
+- **Throttling**: Custom guards for rate limiting on login and post creation
+- **Data Serialization**: Class serialization for sensitive data exclusion
+- **Environment Variables**: Secure configuration management with joi validation
+- **Database Security**: PostgreSQL with Docker setup
 
 ### Data Validation
-- ✅ DTOs for input validation
-- ✅ Custom pipes and validation rules
-- ✅ Comprehensive error handling
+- DTOs for input validation
+- Custom pipes and validation rules
+- Comprehensive error handling
 
-## 📦 Project Setup
+## Project Setup
 
 ### Prerequisites
 - Node.js (v14 or higher)
-- npm or yarn
-- Docker (for PostgreSQL setup)
+- pnpm 
+- Docker Engine(for PostgreSQL setup)
+- Postman for API Testing
+  
+** Install pnpm globally if you have never installed it before : 
+ ```bash
+$ npm i -g pnpm
+$ pnpm -v
+```
 
-### Installation
+### Install the dependencies
 
 ```bash
-# Install dependencies
-$ npm install
+$ pnpm install
 ```
 
 ### Environment Configuration
@@ -76,34 +82,28 @@ $ npm install
 Create a `.env` file in the root directory with the following variables:
 
 ```env
-# Database
+APP_NAME=NESTJS
+
+# Postgres setup info
 DB_HOST=localhost
 DB_PORT=5432
-DB_USERNAME=postgres
-DB_PASSWORD=your_password
-DB_NAME=nestjs_rbac
+DB_USER=your-username
+DB_PASS=your-password
+DB_NAME=your-database-name
 
-# JWT
-JWT_SECRET=your_jwt_secret
-JWT_EXPIRATION=3600
-
-# App
-PORT=3000
-NODE_ENV=development
+#JWT
+JWT_ACCESS_SECRET=your_access_secret
+JWT_REFRESH_SECRET=your_refresh_secret
 ```
 
-## 🐳 Docker Setup for PostgreSQL
+## Docker Setup for PostgreSQL
 
 ```bash
 # Run PostgreSQL container
-$ docker run --name postgres-db \
-  -e POSTGRES_PASSWORD=your_password \
-  -e POSTGRES_DB=nestjs_rbac \
-  -p 5432:5432 \
-  -d postgres
+$ docker compose up -d
 ```
 
-## 🏃 Running the Application
+## Running the Application
 
 ```bash
 # Development mode with auto-reload
@@ -119,214 +119,212 @@ $ npm run start:prod
 $ npm run start:debug
 ```
 
-## 🧪 Testing
+## API Contract
 
-```bash
-# Unit tests
-$ npm run test
-
-# Watch mode
-$ npm run test:watch
-
-# Test coverage
-$ npm run test:cov
-
-# E2E tests
-$ npm run test:e2e
-```
-
-## 📁 Project Structure
+## Base URL
 
 ```
-src/
-├── auth/              # Authentication module (JWT, login, register, refresh)
-├── users/             # User management module
-├── posts/             # Posts management module
-│   └── dto/           # Data Transfer Objects for posts
-├── guards/            # Custom guards (JWT, RBAC)
-├── decorators/        # Custom decorators (Roles, User)
-├── pipes/             # Custom pipes and validation
-├── main.ts            # Application entry point
-└── app.module.ts      # Root module configuration
+http://localhost:3000
 ```
 
-## 📝 Commit History & Recent Updates
+## Authentication
 
-### Latest Changes (April 2026)
+Most endpoints require a Bearer token in the Authorization header: (except Register User and Refresh Token)
 
-1. **Pagination & Caching Enhancement** (Apr 04, 2026)
-   - Implemented pagination for posts retrieval in PostsService and PostsController
-   - Integrated Cache Manager for optimized data access
-   - Commit: `930064ce7b45d37965651ad4f4843a2e65f2cecb`
-
-2. **Caching & Pagination Foundation** (Apr 01, 2026)
-   - Added caching support and pagination for posts retrieval
-   - Commit: `6068273225547efd674846329d06ed195f649b89`
-
-### Security Features (March 2026)
-
-3. **Request Throttling** (Mar 30, 2026)
-   - Implemented throttling for login and post creation endpoints
-   - Custom throttle guards for API protection
-   - Commit: `3465f753bc80556aab4b7e0432131ef2421dfa98`
-
-4. **Entity Relationships & Data Serialization** (Mar 29, 2026)
-   - Refactored user and post entities to implement author relationships
-   - Enhanced JWT validation and class serialization for sensitive data
-   - Commit: `4271fc95194dcf45d5178dbd79012bf28479bc5c`
-
-5. **API Documentation** (Mar 28, 2026)
-   - Enhanced documentation in AuthController and AuthService
-   - Detailed request body and header information for all endpoints
-   - Commit: `af73d5447174602c4d7c3c274871e8dd33fd4d52`
-
-### Core Implementation (March-February 2026)
-
-6. **RBAC Implementation** (Mar 25, 2026)
-   - JWT strategy configuration and passport integration
-   - Custom roles guard and decorators for role-based access
-   - Commit: `e96a8df3862153ef86762b272448883449c89418`
-
-7. **JWT Strategy** (Mar 04, 2026)
-   - Implemented JWT Strategy
-   - Commit: `bd8a0ad14cd2e78a00c42e0e6b7f12a025c34b15`
-
-8. **Authentication Services** (Mar 01-03, 2026)
-   - Complete user registration and admin registration services
-   - Login service and refresh token functionality
-   - Services for Login and RefreshToken with complete controllers
-   - Commits: `b02b8f02b9ea00c02e349c092eb3ca242638e85d`, `e363c9dfcbacb3652589ea5a059a435ad3fb9dae`
-
-### Foundation Setup (February 2026)
-
-9. **Database Setup** (Feb 16, 2026)
-   - Docker PostgreSQL configuration and connection establishment
-   - Commit: `b552e5f1b5271cec50b04ed60f018495ca3dce8d`
-
-10. **Data Validation** (Feb 10, 2026)
-    - DTOs, pipes and validation setup
-    - Commit: `acf3a7c6210df05f724ebaf49bf2a3d7b8612769`
-
-11. **RESTful APIs** (Feb 08, 2026)
-    - Complete CRUD operations for posts management
-    - Commit: `c704f3ab9f2080faa9c540297237337c9c98c9cc`
-
-12. **Environment Setup** (Feb 01, 2026)
-    - Code cleanup: Basic nestjs template (removed hello and user modules)
-    - Load env variables in project
-    - Commits: `782b662c31d7f3c22ea9702eb556b8e77716b98e`, `5cecaf0342ed335d5a7af55704da6950a3157caf`
-
-13. **Project Initialization** (Jan 31, 2026)
-    - Understanding Modules, Controllers and Services, Dependency Injection
-    - Initial project setup with NestJS fundamentals
-    - Commit: `979fdb2ec287ea56e83b5d7e1614f8144a9b0267`
-
-## 🔐 API Examples
-
-### Authentication Endpoints
-
-```bash
-# Register User
-POST /auth/register
-Content-Type: application/json
-{
-  "username": "john_doe",
-  "email": "john@example.com",
-  "password": "securePassword123",
-  "role": "user"
-}
-
-# Register Admin
-POST /auth/register-admin
-Content-Type: application/json
-{
-  "username": "admin_user",
-  "email": "admin@example.com",
-  "password": "securePassword123"
-}
-
-# Login
-POST /auth/login
-Content-Type: application/json
-{
-  "email": "john@example.com",
-  "password": "securePassword123"
-}
-
-# Refresh Token
-POST /auth/refresh
-Headers: {
-  "Authorization": "Bearer <refresh_token>"
-}
 ```
-
-### Posts Management Endpoints
-
-```bash
-# Get all posts with pagination (cached)
-GET /posts?limit=10&offset=0
-Headers: {
-  "Authorization": "Bearer <jwt_token>"
-}
-
-# Create post (requires authentication, throttled)
-POST /posts
-Headers: {
-  "Authorization": "Bearer <jwt_token>"
-}
-Content-Type: application/json
-{
-  "title": "My First Post",
-  "content": "This is the content of my post"
-}
-
-# Get single post
-GET /posts/:id
-Headers: {
-  "Authorization": "Bearer <jwt_token>"
-}
-
-# Update post (only by author or admin)
-PUT /posts/:id
-Headers: {
-  "Authorization": "Bearer <jwt_token>"
-}
-Content-Type: application/json
-{
-  "title": "Updated Title",
-  "content": "Updated content"
-}
-
-# Delete post (only by author or admin)
-DELETE /posts/:id
-Headers: {
-  "Authorization": "Bearer <jwt_token>"
-}
+Authorization: Bearer <access_token>
 ```
-
-## 📚 Resources
-
-- [NestJS Documentation](https://docs.nestjs.com)
-- [NestJS Discord Community](https://discord.gg/G7Qnnhy)
-- [TypeORM Documentation](https://typeorm.io)
-- [Passport Authentication](http://www.passportjs.org/)
-- [JWT Documentation](https://jwt.io)
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request for any improvements.
-
-## 📄 License
-
-This project is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
-
-## 👤 Author
-
-**Sayan Sen**
-- Email: sayansen0361@gmail.com
-- GitHub: [@Sayan0361](https://github.com/Sayan0361)
 
 ---
 
-**Last Updated**: April 5, 2026
-**Language Composition**: TypeScript (97.8%), JavaScript (2.2%)
+## Auth Endpoints
+
+### 1. Register User
+
+Create a new user account.
+
+| Field | Value |
+|-------|-------|
+| Method Type | POST |
+| Request URL | `{{baseURL}}/auth/register` |
+| Headers | None |
+| Body | `{ "email": "user@example.com", "name": "username", "password": "password123" }` |
+
+---
+
+### 2. Login
+
+Authenticate and receive access token.
+
+| Field | Value |
+|-------|-------|
+| Method Type | POST |
+| Request URL | `{{baseURL}}/auth/login` |
+| Headers | None |
+| Body | `{ "email": "user@example.com", "password": "password123" }` |
+
+---
+
+### 3. Refresh Token
+
+Get a new access token using a refresh token.
+
+| Field | Value |
+|-------|-------|
+| Method Type | POST |
+| Request URL | `{{baseURL}}/auth/refresh` |
+| Headers | None |
+| Body | `{ "refreshToken": "your_refresh_token_here" }` |
+
+---
+
+### 4. Get Profile
+
+Get current authenticated user's profile.
+
+| Field | Value |
+|-------|-------|
+| Method Type | GET |
+| Request URL | `{{baseURL}}/auth/profile` |
+| Headers | `Authorization: Bearer <access_token>` |
+| Body | None |
+
+---
+
+### 5. Create Admin (Admin only)
+
+Create a new admin account. Requires ADMIN role.
+
+| Field | Value |
+|-------|-------|
+| Method Type | POST |
+| Request URL | `{{baseURL}}/auth/create-admin` |
+| Headers | `Authorization: Bearer <admin_access_token>` |
+| Body | `{ "email": "admin@example.com", "name": "adminname", "password": "admin123" }` |
+
+---
+
+## Initial Super Admin Setup
+
+1. Generate password hash:
+   ```javascript
+   bcrypt.hash('123456', 10)
+   ```
+
+2. Insert into database:
+   ```sql
+   INSERT INTO "user_entity" (email, name, password, role)
+   VALUES ('admin@gmail.com', 'Admin', '<hash>', 'admin');
+   ```
+
+3. Login credentials:
+   ```json
+   {
+     "email": "admin@gmail.com",
+     "password": "123456"
+   }
+   ```
+
+---
+
+## Role Based Access Control
+
+| Role | Permissions |
+|------|-------------|
+| USER | Access own profile only |
+| ADMIN | Create new admin users |
+
+---
+
+## Post Endpoints
+
+### 1. Get All Posts
+
+Get paginated list of posts with optional search.
+
+| Field | Value |
+|-------|-------|
+| Method Type | GET |
+| Request URL | `{{baseURL}}/posts` |
+| Headers | None |
+| Query Parameters | `search` (optional), `page` (optional, default: 1), `limit` (optional, default: 10) |
+| Body | None |
+
+**Examples:**
+- `{{baseURL}}/posts`
+- `{{baseURL}}/posts?search=getting`
+- `{{baseURL}}/posts?page=2&limit=10`
+
+---
+
+### 2. Get Single Post
+
+Get a specific post by ID.
+
+| Field | Value |
+|-------|-------|
+| Method Type | GET |
+| Request URL | `{{baseURL}}/posts/{id}` |
+| Headers | None |
+| Path Parameters | `id` (integer) |
+| Body | None |
+
+**Example:** `{{baseURL}}/posts/4`
+
+---
+
+### 3. Create Post
+
+Create a new post. Requires authentication.
+
+| Field | Value |
+|-------|-------|
+| Method Type | POST |
+| Request URL | `{{baseURL}}/posts` |
+| Headers | `Authorization: Bearer <access_token>` |
+| Body | `{ "title": "Post title", "content": "Post content", "authorName": "Author name" }` |
+
+---
+
+### 4. Update Post
+
+Update an existing post. Requires authentication.
+
+| Field | Value |
+|-------|-------|
+| Method Type | PUT |
+| Request URL | `{{baseURL}}/posts/{id}` |
+| Headers | `Authorization: Bearer <access_token>` |
+| Path Parameters | `id` (integer) |
+| Body | `{ "title": "Updated title", "content": "Updated content" }` |
+
+**Example:** `{{baseURL}}/posts/1`
+
+---
+
+### 5. Delete Post
+
+Delete a post by ID. Requires authentication.
+
+| Field | Value |
+|-------|-------|
+| Method Type | DELETE |
+| Request URL | `{{baseURL}}/posts/{id}` |
+| Headers | `Authorization: Bearer <access_token>` |
+| Path Parameters | `id` (integer) |
+| Body | None |
+
+**Example:** `{{baseURL}}/posts/1`
+
+---
+
+## Rate Limiting using CacheManager
+
+Create, update, and delete operations are protected by a throttler. Excessive requests will be rejected for a minute.
+
+---
+
+## Resources
+
+- [NestJS Documentation](https://docs.nestjs.com)
+- [YouTube Tutorial](https://youtu.be/XVZ10uFY9DU?si=VZ6gEsp1_rpqXI8)
