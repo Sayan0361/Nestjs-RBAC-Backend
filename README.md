@@ -107,16 +107,16 @@ $ docker compose up -d
 
 ```bash
 # Development mode with auto-reload
-$ npm run start:dev
+$ pnpm start:dev
 
 # Production build
-$ npm run build
+$ pnpm build
 
 # Production mode
-$ npm run start:prod
+$ pnpm start:prod
 
 # Debug mode
-$ npm run start:debug
+$ pnpm start:debug
 ```
 
 ## API Contract
